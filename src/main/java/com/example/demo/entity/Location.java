@@ -19,5 +19,16 @@ public class Location{
     public Location(){
      
     }
-    
+    public void locationName(String locationName){
+        this.locationName=locationName;
+    }
+    public String description(){
+        return this.description;
+    }
+     public void description(String description){
+        this.locationName=locationName;
+    }
+    public String locationName(){
+        return this.locationName;
+    }
     }
