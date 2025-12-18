@@ -18,12 +18,13 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Location createLocation(Location location) {
-        if (location.region() == null || location.region().isBlank()) {
-            throw new IllegalArgumentException("Region is required");
-        }
-        return locationRepository.save(location);
+public Location createLocation(Location location) {
+    if (location.getRegion() == null || location.getRegion().isBlank()) {
+        throw new IllegalArgumentException("Region is required");
     }
+    return locationRepository.save(location);
+}
+
 
     @Override
     public List<Location> listLocations() {
