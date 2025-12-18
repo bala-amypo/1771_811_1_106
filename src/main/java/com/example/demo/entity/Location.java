@@ -7,8 +7,17 @@ public class Location{
     private String locationName;
     private String description;
     private String region;
-    private LocalDateTime installedAt;
-    private Boolean isActive;
+    private LocalDateTime createdAt;
 
-    public Location(Long id,String locationName,String description,String region,)
-}
+    public Location(Long id,String locationName,String description,String region,LocalDateTime createdAt){
+        this.id=id;
+        this.locationName=locationName;
+        this.description=description;
+        this.region=region;
+        this.createdAt=createdAt;
+    }
+    public Location(){
+     
+    }
+    
+    }
