@@ -22,11 +22,23 @@ public class Location{
     public void locationName(String locationName){
         this.locationName=locationName;
     }
+    public String locationName(){
+        return this.locationName;
+    }
+     public void description(String description){
+        this.description=description;
+    }
     public String description(){
         return this.description;
     }
-     public void description(String description){
-        this.locationName=locationName;
+     public void region(String region){
+        this.region=region;
+    }
+    public String region(){
+        return this.region;
+    }
+     public LocalDateTime createdAt(LocalDateTime createdAt){
+        this.createdAt=createdAt;
     }
     public String locationName(){
         return this.locationName;
