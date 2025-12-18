@@ -37,10 +37,10 @@ public class Location{
     public String region(){
         return this.region;
     }
-     public LocalDateTime createdAt(LocalDateTime createdAt){
+     public void createdAt(LocalDateTime createdAt){
         this.createdAt=createdAt;
     }
-    public String locationName(){
-        return this.locationName;
+    public LocalDateTime createdAt(){
+        return this.createdAt;
     }
     }
