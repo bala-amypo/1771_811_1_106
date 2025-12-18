@@ -1,57 +1,50 @@
 package com.example.demo.entity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
-
-
-
-
 
 @Entity
-public class Location{
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id;
-    @Column(unique=true)
-    private String locationName;
-    private String description;
-    private String region;
-    private LocalDateTime createdAt;
+public class Location {
 
-    public Location(Long id,String locationName,String description,String region,LocalDateTime createdAt){
-        this.id=id;
-        this.locationName=locationName;
-        this.description=description;
-        this.region=region;
-        this.createdAt=createdAt;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String region;
+    private String city;
+
+    public Location() {
     }
-    public Location(){
-     
+
+    public Location(Long id, String region, String city) {
+        this.id = id;
+        this.region = region;
+        this.city = city;
     }
-    public void locationName(String locationName){
-        this.locationName=locationName;
+
+    public Long getId() {
+        return id;
     }
-    public String locationName(){
-        return this.locationName;
+
+    public void setId(Long id) {
+        this.id = id;
     }
-     public void description(String description){
-        this.description=description;
+
+    public String getRegion() {
+        return region;
     }
-    public String description(){
-        return this.description;
+
+    public void setRegion(String region) {
+        this.region = region;
     }
-     public void region(String region){
-        this.region=region;
+
+    public String getCity() {
+        return city;
     }
-    public String region(){
-        return this.region;
+
+    public void setCity(String city) {
+        this.city = city;
     }
-     public void createdAt(LocalDateTime createdAt){
-        this.createdAt=createdAt;
-    }
-    public LocalDateTime createdAt(){
-        return this.createdAt;
-    }
-    }
+}
