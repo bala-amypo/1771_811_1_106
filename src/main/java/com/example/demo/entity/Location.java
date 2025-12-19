@@ -21,7 +21,6 @@ public class Location {
 
     private LocalDateTime createdAt;
 
-    // ✅ REQUIRED by JPA
     public Location() {
     }
 
@@ -34,7 +33,6 @@ public class Location {
         this.createdAt = createdAt;
     }
 
-    // ---------- GETTERS & SETTERS ----------
 
     public Long getId() {
         return id;
