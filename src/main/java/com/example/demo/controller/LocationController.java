@@ -8,7 +8,7 @@ import com.example.demo.entity.Location;
 import com.example.demo.service.LocationService;
 
 @RestController
-@RequestMapping("/api/locations")
+@RequestMapping("/locations")
 public class LocationController {
 
     private final LocationService locationService;
@@ -23,7 +23,7 @@ public class LocationController {
     }
 
     @GetMapping
-    public List<Location> getAllLocations() {
+    public List<Location> listLocations() {
         return locationService.listLocations();
     }
 
