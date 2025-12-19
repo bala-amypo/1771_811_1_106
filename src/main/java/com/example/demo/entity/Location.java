@@ -4,20 +4,26 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "locations")
 public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String locationName;
 
     private String description;
+
+    @Column(nullable = false)
     private String region;
+
     private LocalDateTime createdAt;
 
-    public Location() {}
+    // ✅ REQUIRED by JPA
+    public Location() {
+    }
 
     public Location(Long id, String locationName, String description,
                     String region, LocalDateTime createdAt) {
@@ -28,7 +34,7 @@ public class Location {
         this.createdAt = createdAt;
     }
 
-    // ✅ STANDARD GETTERS & SETTERS (IMPORTANT)
+    // ---------- GETTERS & SETTERS ----------
 
     public Long getId() {
         return id;
