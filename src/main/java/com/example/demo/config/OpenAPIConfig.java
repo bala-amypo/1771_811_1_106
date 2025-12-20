@@ -1,15 +1,19 @@
-spring.application.name=demo
-# Don't change the port
-server.port = 9001
-# for https
-server.forward-headers-strategy=framework 
+package com.example.demo.config;
 
-spring.datasource.url=jdbc:mysql://localhost:3306/transport_pro?createDatabaseIfNotExist=true
-spring.datasource.username=root
-spring.datasource.password=Amypo
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
-spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+@Configuration
+public class OpenApiConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Water Quality Compliance API")
+                        .version("1.0")
+                        .description("API for monitoring and evaluating water quality compliance"));
+    }
+}
