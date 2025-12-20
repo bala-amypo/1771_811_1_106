@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class OpenApiConfig {
 
-    @Primary   // ⭐ MAIN BEAN
+    @Primary   
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
