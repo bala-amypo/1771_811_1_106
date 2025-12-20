@@ -10,19 +10,23 @@ public class SensorReading {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double readingValue;
-
-    private LocalDateTime readingTime;
-
-    private String status;
-
     @ManyToOne
     private Sensor sensor;
 
-    public SensorReading() {}
+    private Double readingValue;
+    private LocalDateTime readingTime;
+    private String status;
 
     public Long getId() {
         return id;
+    }
+
+    public Sensor getSensor() {
+        return sensor;
+    }
+
+    public void setSensor(Sensor sensor) {
+        this.sensor = sensor;
     }
 
     public Double getReadingValue() {
@@ -47,13 +51,5 @@ public class SensorReading {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Sensor getSensor() {
-        return sensor;
-    }
-
-    public void setSensor(Sensor sensor) {
-        this.sensor = sensor;
     }
 }

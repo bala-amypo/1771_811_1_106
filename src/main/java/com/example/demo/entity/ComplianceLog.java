@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "compliance_logs")
 public class ComplianceLog {
 
     @Id
@@ -12,29 +11,54 @@ public class ComplianceLog {
     private Long id;
 
     @ManyToOne
-    private SensorReading sensorReading;
+    private Sensor sensor;
 
-    @ManyToOne
-    private ComplianceThreshold thresholdUsed;
-
-    private String statusAssigned;
-    private String remarks;
+    private Double readingValue;
+    private String complianceStatus;
+    private String severityLevel;
     private LocalDateTime loggedAt;
 
-    public ComplianceLog() {
-        this.loggedAt = LocalDateTime.now();
+    public Long getId() {
+        return id;
     }
 
-    public ComplianceLog(SensorReading sr, ComplianceThreshold ct,
-                         String status, String remarks, LocalDateTime time) {
-        this.sensorReading = sr;
-        this.thresholdUsed = ct;
-        this.statusAssigned = status;
-        this.remarks = remarks;
-        this.loggedAt = time;
+    public Sensor getSensor() {
+        return sensor;
     }
 
-    public void setThresholdUsed(ComplianceThreshold t) { this.thresholdUsed = t; }
-    public void setStatusAssigned(String s) { this.statusAssigned = s; }
-    public void setRemarks(String r) { this.remarks = r; }
+    public void setSensor(Sensor sensor) {
+        this.sensor = sensor;
+    }
+
+    public Double getReadingValue() {
+        return readingValue;
+    }
+
+    public void setReadingValue(Double readingValue) {
+        this.readingValue = readingValue;
+    }
+
+    public String getComplianceStatus() {
+        return complianceStatus;
+    }
+
+    public void setComplianceStatus(String complianceStatus) {
+        this.complianceStatus = complianceStatus;
+    }
+
+    public String getSeverityLevel() {
+        return severityLevel;
+    }
+
+    public void setSeverityLevel(String severityLevel) {
+        this.severityLevel = severityLevel;
+    }
+
+    public LocalDateTime getLoggedAt() {
+        return loggedAt;
+    }
+
+    public void setLoggedAt(LocalDateTime loggedAt) {
+        this.loggedAt = loggedAt;
+    }
 }
