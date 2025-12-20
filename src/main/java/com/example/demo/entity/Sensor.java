@@ -9,15 +9,24 @@ public class Sensor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private String sensorCode;
+
     private String sensorType;
 
     @ManyToOne
     private Location location;
 
-    public Sensor() {}
-
     public Long getId() {
         return id;
+    }
+
+    public String getSensorCode() {
+        return sensorCode;
+    }
+
+    public void setSensorCode(String sensorCode) {
+        this.sensorCode = sensorCode;
     }
 
     public String getSensorType() {

@@ -1,10 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "compliance_thresholds")
 public class ComplianceThreshold {
 
     @Id
@@ -14,20 +12,43 @@ public class ComplianceThreshold {
     @Column(unique = true)
     private String sensorType;
 
-    private Double minValue;
-    private Double maxValue;
+    private double minValue;
+    private double maxValue;
     private String severityLevel;
-    private LocalDateTime createdAt;
 
-    public ComplianceThreshold() {
-        this.createdAt = LocalDateTime.now();
+    public Long getId() {
+        return id;
     }
 
-    public String getSensorType() { return sensorType; }
-    public Double getMinValue() { return minValue; }
-    public Double getMaxValue() { return maxValue; }
+    public String getSensorType() {
+        return sensorType;
+    }
 
-    public Object getSeverityLevel() {
-        throw new UnsupportedOperationException("Unimplemented method 'getSeverityLevel'");
+    public void setSensorType(String sensorType) {
+        this.sensorType = sensorType;
+    }
+
+    public double getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(double minValue) {
+        this.minValue = minValue;
+    }
+
+    public double getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(double maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public String getSeverityLevel() {
+        return severityLevel;
+    }
+
+    public void setSeverityLevel(String severityLevel) {
+        this.severityLevel = severityLevel;
     }
 }
