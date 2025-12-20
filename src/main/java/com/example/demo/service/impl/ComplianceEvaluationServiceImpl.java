@@ -1,86 +1,46 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
 
 import com.example.demo.entity.ComplianceLog;
 import com.example.demo.entity.ComplianceThreshold;
 import com.example.demo.entity.SensorReading;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.ComplianceLogRepository;
-import com.example.demo.repository.ComplianceThresholdRepository;
-import com.example.demo.repository.SensorReadingRepository;
-import com.example.demo.service.ComplianceEvaluationService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
-public class ComplianceEvaluationServiceImpl
-        implements ComplianceEvaluationService {
+public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationService {
 
-    private final SensorReadingRepository readingRepo;
-    private final ComplianceThresholdRepository thresholdRepo;
-    private final ComplianceLogRepository logRepo;
+    private final ComplianceThresholdService thresholdService;
+    private final ComplianceLogService logService;
 
-    public ComplianceEvaluationServiceImpl(
-            SensorReadingRepository r,
-            ComplianceThresholdRepository t,
-            ComplianceLogRepository l) {
-        this.readingRepo = r;
-        this.thresholdRepo = t;
-        this.logRepo = l;
+    public ComplianceEvaluationServiceImpl(ComplianceThresholdService thresholdService,
+                                           ComplianceLogService logService) {
+        this.thresholdService = thresholdService;
+        this.logService = logService;
     }
 
     @Override
-    public ComplianceLog evaluateReading(Long readingId) {
-
-        SensorReading reading = readingRepo.findById(readingId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Reading not found"));
+    public ComplianceLog evaluateCompliance(SensorReading reading) {
 
         ComplianceThreshold threshold =
-                thresholdRepo.findBySensorType(
+                thresholdService.getBySensorType(
                         reading.getSensor().getSensorType());
 
-        if (threshold == null) {
-            throw new ResourceNotFoundException("Threshold not found");
-        }
+        ComplianceLog log = new ComplianceLog();
+        log.setSensor(reading.getSensor());
+        log.setReadingValue(reading.getReadingValue());
+        log.setLoggedAt(LocalDateTime.now());
 
-        String status =
-                (reading.getReadingValue() < threshold.getMinValue()
-                        || reading.getReadingValue() > threshold.getMaxValue())
-                        ? "UNSAFE" : "SAFE";
+        if (reading.getReadingValue() < threshold.getMinValue()
+                || reading.getReadingValue() > threshold.getMaxValue()) {
 
-        List<ComplianceLog> logs =
-                logRepo.findBySensorReading_Id(readingId);
-
-        ComplianceLog log;
-        if (!logs.isEmpty()) {
-            log = logs.get(0);
-            log.setThresholdUsed(threshold);
-            log.setStatusAssigned(status);
-            log.setRemarks("Evaluated");
+            log.setComplianceStatus("NON_COMPLIANT");
+            log.setSeverityLevel(threshold.getSeverityLevel());
         } else {
-            log = new ComplianceLog(
-                    reading,
-                    threshold,
-                    status,
-                    "Evaluated",
-                    LocalDateTime.now()
-            );
+            log.setComplianceStatus("COMPLIANT");
+            log.setSeverityLevel("NONE");
         }
 
-        return logRepo.save(log);
-    }
-
-    @Override
-    public ComplianceLog getComplianceLog(Long id) {
-        return logRepo.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Compliance log not found"));
-    }
-
-    @Override
-    public List<ComplianceLog> getLogsByReading(Long readingId) {
-        return logRepo.findBySensorReading_Id(readingId);
+        return logService.saveLog(log);
     }
 }
