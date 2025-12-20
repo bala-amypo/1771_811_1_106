@@ -3,30 +3,30 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.ComplianceLog;
 import com.example.demo.entity.ComplianceThreshold;
 import com.example.demo.entity.SensorReading;
+import com.example.demo.repository.ComplianceLogRepository;
 import com.example.demo.repository.ComplianceThresholdRepository;
 import com.example.demo.service.ComplianceEvaluationService;
-import com.example.demo.service.ComplianceLogService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationService {
 
     private final ComplianceThresholdRepository thresholdRepository;
-    private final ComplianceLogService complianceLogService;
+    private final ComplianceLogRepository complianceLogRepository;
 
-    public ComplianceEvaluationServiceImpl(ComplianceThresholdRepository thresholdRepository,
-                                           ComplianceLogService complianceLogService) {
+    public ComplianceEvaluationServiceImpl(
+            ComplianceThresholdRepository thresholdRepository,
+            ComplianceLogRepository complianceLogRepository) {
         this.thresholdRepository = thresholdRepository;
-        this.complianceLogService = complianceLogService;
+        this.complianceLogRepository = complianceLogRepository;
     }
 
     @Override
     public ComplianceLog evaluateCompliance(SensorReading reading) {
 
-        ComplianceThreshold threshold =
-                thresholdRepository.findBySensorType(
-                        reading.getSensor().getSensorType()
-                );
+        ComplianceThreshold threshold = thresholdRepository
+                .findBySensorType(reading.getSensor().getSensorType())
+                .orElseThrow(() -> new RuntimeException("Threshold not found"));
 
         ComplianceLog log = new ComplianceLog();
         log.setSensor(reading.getSensor());
@@ -39,6 +39,6 @@ public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationServ
             log.setStatus("NON_COMPLIANT");
         }
 
-        return complianceLogService.saveLog(log);
+        return complianceLogRepository.save(log);
     }
 }
