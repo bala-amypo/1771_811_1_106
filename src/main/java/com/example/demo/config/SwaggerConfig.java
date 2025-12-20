@@ -9,8 +9,8 @@ import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
-
-    @Bean(name = "swaggerOpenAPI")   // ⭐ DIFFERENT BEAN NAME
+    @Primary
+    @Bean   
     public OpenAPI swaggerOpenAPI() {
         return new OpenAPI()
                 .servers(List.of(
