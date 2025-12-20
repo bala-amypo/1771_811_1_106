@@ -1,19 +1,47 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Sensor;
 import com.example.demo.entity.SensorReading;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.SensorReadingRepository;
+import com.example.demo.repository.SensorRepository;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
-public interface SensorReadingService {
+@Service
+public class SensorReadingService {
 
-    SensorReading submitReading(Long sensorId, SensorReading reading);
+    private final SensorReadingRepository readingRepository;
+    private final SensorRepository sensorRepository;
 
-    SensorReading getReading(Long id);
+    public SensorReadingService(SensorReadingRepository readingRepository,
+                                SensorRepository sensorRepository) {
+        this.readingRepository = readingRepository;
+        this.sensorRepository = sensorRepository;
+    }
 
-    List<SensorReading> getReadingsBySensor(Long sensorId);
+    public SensorReading submitReading(Long sensorId, SensorReading reading) {
+        if (reading.getReadingValue() == null) {
+            throw new IllegalArgumentException("readingvalue");
+        }
 
-    List<SensorReading> listSensorReadings();
+        Sensor sensor = sensorRepository.findById(sensorId)
+                .orElseThrow(() -> new ResourceNotFoundException("not found"));
 
-    SensorReading getSensorReadingById(Long id);
+        reading.setSensor(sensor);
+        reading.setReadingTime(LocalDateTime.now());
 
-    SensorReading createSensorReading(SensorReading sensorReading);
+        return readingRepository.save(reading);
+    }
+
+    public SensorReading getReading(Long id) {
+        return readingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("not found"));
+    }
+
+    public List<SensorReading> listSensorReadings() {
+        return readingRepository.findAll();
+    }
 }

@@ -1,14 +1,45 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.ComplianceLog;
+import com.example.demo.entity.ComplianceThreshold;
+import com.example.demo.entity.SensorReading;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
-public interface ComplianceEvaluationService {
+@Service
+public class ComplianceEvaluationService {
 
-    ComplianceLog evaluateReading(Long readingId);
+    private final ComplianceThresholdService thresholdService;
+    private final ComplianceLogService logService;
 
-    ComplianceLog getComplianceLog(Long id);
+    public ComplianceEvaluationService(ComplianceThresholdService thresholdService,
+                                       ComplianceLogService logService) {
+        this.thresholdService = thresholdService;
+        this.logService = logService;
+    }
 
-    List<ComplianceLog> getLogsByReading(Long readingId);
+    public ComplianceLog evaluate(SensorReading reading) {
+
+        ComplianceThreshold threshold =
+                thresholdService.getBySensorType(
+                        reading.getSensor().getSensorType());
+
+        ComplianceLog log = new ComplianceLog();
+        log.setSensor(reading.getSensor());
+        log.setReadingValue(reading.getReadingValue());
+        log.setLoggedAt(LocalDateTime.now());
+
+        if (reading.getReadingValue() < threshold.getMinValue()
+                || reading.getReadingValue() > threshold.getMaxValue()) {
+
+            log.setComplianceStatus("NON_COMPLIANT");
+            log.setSeverityLevel(threshold.getSeverityLevel());
+        } else {
+            log.setComplianceStatus("COMPLIANT");
+            log.setSeverityLevel("NONE");
+        }
+
+        return logService.save(log);
+    }
 }
