@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI customOpenAPI() {
+    public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Water Quality Compliance API")
+                        .title("Demo API")
                         .version("1.0")
-                        .description("API for monitoring and evaluating water quality compliance"));
+                        .description("API documentation"));
     }
 }
