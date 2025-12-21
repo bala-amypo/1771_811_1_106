@@ -19,7 +19,7 @@ public class SwaggerConfig {
                         .version("1.0")
                         .description("API for monitoring and evaluating water quality compliance"))
                 .servers(List.of(
-                        new Server().url("")
+                        new Server().url("https://9215.408procr.amypo.ai/")
                 ));
     }
 }
