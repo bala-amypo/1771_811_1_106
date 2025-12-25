@@ -6,5 +6,7 @@ public interface ComplianceThresholdService {
 
     ComplianceThreshold saveThreshold(ComplianceThreshold threshold);
 
+    ComplianceThreshold getThresholdById(Long id);
+
     ComplianceThreshold getBySensorType(String sensorType);
 }

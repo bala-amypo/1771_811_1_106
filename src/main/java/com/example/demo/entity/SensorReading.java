@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 public class SensorReading {
@@ -10,23 +9,32 @@ public class SensorReading {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Sensor sensor;
+    private Long sensorId;
+
+    private String sensorType;
 
     private Double readingValue;
-    private LocalDateTime readingTime;
-    private String status;
+
+    public SensorReading() {}
 
     public Long getId() {
         return id;
     }
 
-    public Sensor getSensor() {
-        return sensor;
+    public Long getSensorId() {
+        return sensorId;
     }
 
-    public void setSensor(Sensor sensor) {
-        this.sensor = sensor;
+    public void setSensorId(Long sensorId) {
+        this.sensorId = sensorId;
+    }
+
+    public String getSensorType() {
+        return sensorType;
+    }
+
+    public void setSensorType(String sensorType) {
+        this.sensorType = sensorType;
     }
 
     public Double getReadingValue() {
@@ -35,21 +43,5 @@ public class SensorReading {
 
     public void setReadingValue(Double readingValue) {
         this.readingValue = readingValue;
-    }
-
-    public LocalDateTime getReadingTime() {
-        return readingTime;
-    }
-
-    public void setReadingTime(LocalDateTime readingTime) {
-        this.readingTime = readingTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

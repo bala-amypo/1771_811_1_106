@@ -32,3 +32,9 @@ public class ComplianceThresholdServiceImpl implements ComplianceThresholdServic
                 .orElseThrow(() -> new ResourceNotFoundException("No threshold found for sensor type: " + sensorType));
     }
 }
+@Override
+public ComplianceThreshold getThresholdById(Long id) {
+    return repo.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                    "Threshold not found with id: " + id));
+}
