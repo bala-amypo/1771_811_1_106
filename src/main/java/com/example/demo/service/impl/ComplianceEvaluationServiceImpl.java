@@ -1,42 +1,31 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.ComplianceThreshold;
+import com.example.demo.entity.SensorReading;
+import com.example.demo.exception.InvalidRequestException;
+import com.example.demo.service.ComplianceEvaluationService;
+import org.springframework.stereotype.Service;
+
 @Service
 public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationService {
 
-    @Autowired
-    private ComplianceThresholdRepository thresholdRepository;
-
-    @Autowired
-    private SensorRepository sensorRepository;
-
-    @Autowired
-    private SensorReadingRepository readingRepository;
-
-    @Autowired
-    private ComplianceLogRepository logRepository;
-
     @Override
-    public ComplianceLog evaluateReading(Long readingId) {
+    public String evaluateReading(SensorReading reading, ComplianceThreshold threshold) {
 
-        SensorReading reading = readingRepository.findById(readingId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Reading not found with id: " + readingId));
+        if (reading == null || reading.getReadingValue() == null) {
+            throw new InvalidRequestException("Reading cannot be null");
+        }
 
-        String sensorType = reading.getSensor().getSensorType();
+        if (threshold == null) {
+            throw new InvalidRequestException("Threshold is required");
+        }
 
-        ComplianceThreshold threshold = thresholdRepository.findBySensorType(sensorType)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "No threshold found for sensor type: " + sensorType));
+        double value = reading.getReadingValue();
+        double min = threshold.getMinValue();
+        double max = threshold.getMaxValue();
 
-        boolean isCompliant =
-                reading.getReadingValue() >= threshold.getMinValue() &&
-                        reading.getReadingValue() <= threshold.getMaxValue();
-
-        ComplianceLog log = new ComplianceLog();
-        log.setSensor(reading.getSensor());
-        log.setReading(reading);
-        log.setCompliant(isCompliant);
-        log.setTimestamp(LocalDateTime.now());
-
-        return logRepository.save(log);
+        if (value < min) return "LOW";
+        if (value > max) return "HIGH";
+        return "NORMAL";
     }
 }

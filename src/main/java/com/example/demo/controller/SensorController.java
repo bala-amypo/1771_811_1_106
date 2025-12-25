@@ -22,7 +22,7 @@ public class SensorController {
     }
 
     @GetMapping("/{id}")
-    public Sensor getSensor(@PathVariable Long id) {
+    public Sensor getSensorById(@PathVariable Long id) {
         return sensorService.getSensorById(id);
     }
 
