@@ -11,6 +11,7 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
+    // Works without modifying application.properties
     @Value("${JWT_SECRET:${jwt.secret:defaultSecretKey}}")
     private String jwtSecret;
 
@@ -34,7 +35,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // Extract email from JWT
+    // Extract email (subject) from JWT
     public String extractEmail(String token) {
         return Jwts.parser()
                 .setSigningKey(jwtSecret)
@@ -50,5 +51,15 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("role");
+    }
+
+    // Validate JWT token
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
