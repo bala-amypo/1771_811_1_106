@@ -4,41 +4,40 @@ import com.example.demo.entity.ComplianceLog;
 import com.example.demo.entity.ComplianceThreshold;
 import com.example.demo.entity.SensorReading;
 import com.example.demo.repository.ComplianceLogRepository;
-import com.example.demo.repository.ComplianceThresholdRepository;
 import com.example.demo.service.ComplianceEvaluationService;
+import com.example.demo.service.ComplianceThresholdService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationService {
 
-    private final ComplianceThresholdRepository thresholdRepository;
-    private final ComplianceLogRepository complianceLogRepository;
+    private final ComplianceThresholdService thresholdService;
+    private final ComplianceLogRepository logRepository;
 
-    public ComplianceEvaluationServiceImpl(
-            ComplianceThresholdRepository thresholdRepository,
-            ComplianceLogRepository complianceLogRepository) {
-        this.thresholdRepository = thresholdRepository;
-        this.complianceLogRepository = complianceLogRepository;
+    public ComplianceEvaluationServiceImpl(ComplianceThresholdService thresholdService,
+                                           ComplianceLogRepository logRepository) {
+        this.thresholdService = thresholdService;
+        this.logRepository = logRepository;
     }
 
     @Override
-    public ComplianceLog evaluateCompliance(SensorReading reading) {
+    public ComplianceLog evaluateReading(SensorReading reading) {
 
-        ComplianceThreshold threshold = thresholdRepository
-                .findBySensorType(reading.getSensor().getSensorType())
-                .orElseThrow(() -> new RuntimeException("Threshold not found"));
+        String sType = reading.getSensor().getType();
+
+        ComplianceThreshold threshold = thresholdService.getBySensorType(sType);
 
         ComplianceLog log = new ComplianceLog();
         log.setSensor(reading.getSensor());
-        log.setReadingValue(reading.getReadingValue());
+        log.setReadingValue(reading.getValue());
 
-        if (reading.getReadingValue() >= threshold.getMinValue()
-                && reading.getReadingValue() <= threshold.getMaxValue()) {
+        if (reading.getValue() >= threshold.getMinValue() &&
+                reading.getValue() <= threshold.getMaxValue()) {
             log.setStatus("COMPLIANT");
         } else {
-            log.setStatus("NON_COMPLIANT");
+            log.setStatus("NON-COMPLIANT");
         }
 
-        return complianceLogRepository.save(log);
+        return logRepository.save(log);
     }
 }

@@ -6,7 +6,7 @@ import com.example.demo.service.ComplianceEvaluationService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/evaluate")
+@RequestMapping("/evaluate")
 public class ComplianceEvaluationController {
 
     private final ComplianceEvaluationService evaluationService;
@@ -16,7 +16,7 @@ public class ComplianceEvaluationController {
     }
 
     @PostMapping
-    public ComplianceLog evaluateCompliance(@RequestBody SensorReading reading) {
-        return evaluationService.evaluateCompliance(reading);
+    public ComplianceLog evaluate(@RequestBody SensorReading reading) {
+        return evaluationService.evaluateReading(reading);
     }
 }

@@ -5,5 +5,5 @@ import com.example.demo.entity.SensorReading;
 
 public interface ComplianceEvaluationService {
 
-    ComplianceLog evaluateCompliance(SensorReading reading);
+    ComplianceLog evaluateReading(SensorReading reading);
 }
