@@ -10,4 +10,6 @@ public interface SensorReadingService {
     SensorReading getReadingById(Long id);
 
     List<SensorReading> getAllReadings();
+
+    List<SensorReading> getReadingsBySensor(Long sensorId);
 }
