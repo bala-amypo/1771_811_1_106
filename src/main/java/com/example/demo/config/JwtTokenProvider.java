@@ -15,12 +15,13 @@ public class JwtTokenProvider {
     private String jwtSecret;
 
     @Value("${jwt.expiration}")
-    private long jwtExpirationInMs;
+    private long jwtExpirationInMs;  // make sure application.properties has: jwt.expiration=3600000
 
+    // Generate token
     public String generateToken(Long userId, String email, String role) {
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put("role", role);
         claims.put("userId", userId);
+        claims.put("role", role);
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
@@ -33,10 +34,12 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    // Extract email from token
     public String extractEmail(String token) {
         return getClaims(token).getSubject();
     }
 
+    // Extract role from token
     public String extractRole(String token) {
         return (String) getClaims(token).get("role");
     }
