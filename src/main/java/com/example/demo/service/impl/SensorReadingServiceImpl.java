@@ -8,57 +8,33 @@ import com.example.demo.repository.SensorRepository;
 import com.example.demo.service.SensorReadingService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class SensorReadingServiceImpl implements SensorReadingService {
 
-    private final SensorReadingRepository readingRepository;
     private final SensorRepository sensorRepository;
+    private final SensorReadingRepository readingRepository;
 
-    public SensorReadingServiceImpl(SensorReadingRepository readingRepository,
-                                    SensorRepository sensorRepository) {
-        this.readingRepository = readingRepository;
+    public SensorReadingServiceImpl(SensorRepository sensorRepository,
+                                    SensorReadingRepository readingRepository) {
         this.sensorRepository = sensorRepository;
+        this.readingRepository = readingRepository;
     }
 
     @Override
-    public SensorReading submitReading(Long sensorId, SensorReading reading) {
+    public SensorReading addReading(SensorReading reading) {
 
+        Long sensorId = reading.getSensor().getId();
         Sensor sensor = sensorRepository.findById(sensorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Sensor not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Sensor not found with ID: " + sensorId));
 
         reading.setSensor(sensor);
-        reading.setReadingTime(LocalDateTime.now());
-
         return readingRepository.save(reading);
-    }
-
-    @Override
-    public SensorReading getReading(Long id) {
-        return readingRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Reading not found"));
     }
 
     @Override
     public List<SensorReading> getReadingsBySensor(Long sensorId) {
         return readingRepository.findBySensorId(sensorId);
-    }
-
-    @Override
-    public List<SensorReading> listSensorReadings() {
-        return readingRepository.findAll();
-    }
-
-    @Override
-    public SensorReading getSensorReadingById(Long id) {
-        return getReading(id);
-    }
-
-    @Override
-    public SensorReading createSensorReading(SensorReading sensorReading) {
-        sensorReading.setReadingTime(LocalDateTime.now());
-        return readingRepository.save(sensorReading);
     }
 }
