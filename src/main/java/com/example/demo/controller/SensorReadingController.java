@@ -1,14 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.SensorReading;
-import com.example.demo.entity.ComplianceThreshold;
-import com.example.demo.entity.ComplianceLog;
+import com.example.demo.entity.ComplianceCheckResult;
 import com.example.demo.service.SensorReadingService;
-import com.example.demo.service.SensorService;
-import com.example.demo.service.ComplianceThresholdService;
 import com.example.demo.service.ComplianceEvaluationService;
-import com.example.demo.service.ComplianceLogService;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,50 +14,36 @@ import java.util.List;
 public class SensorReadingController {
 
     private final SensorReadingService readingService;
-    private final ComplianceThresholdService thresholdService;
     private final ComplianceEvaluationService evaluationService;
-    private final ComplianceLogService logService;
 
-    public SensorReadingController(
-            SensorReadingService readingService,
-            ComplianceThresholdService thresholdService,
-            ComplianceEvaluationService evaluationService,
-            ComplianceLogService logService) {
-
+    public SensorReadingController(SensorReadingService readingService,
+                                   ComplianceEvaluationService evaluationService) {
         this.readingService = readingService;
-        this.thresholdService = thresholdService;
         this.evaluationService = evaluationService;
-        this.logService = logService;
     }
 
-    @PostMapping("/sensor/{sensorId}")
-    public SensorReading submitReading(@PathVariable Long sensorId,
-                                       @RequestBody SensorReading reading) {
-
-        SensorReading savedReading = readingService.submitReading(sensorId, reading);
-
-        ComplianceThreshold threshold =
-                thresholdService.getBySensorType(savedReading.getSensor().getSensorType());
-
-        String status = evaluationService.evaluateReading(savedReading, threshold);
-
-        logService.createLog(savedReading.getSensor(), savedReading.getReadingValue(), status);
-
-        return savedReading;
+    @PostMapping("/{sensorId}")
+    public ResponseEntity<SensorReading> addReading(
+            @PathVariable Long sensorId,
+            @RequestBody SensorReading reading
+    ) {
+        return ResponseEntity.ok(readingService.addReading(sensorId, reading));
     }
 
     @GetMapping("/{id}")
-    public SensorReading getReading(@PathVariable Long id) {
-        return readingService.getReading(id);
-    }
-
-    @GetMapping("/sensor/{sensorId}")
-    public List<SensorReading> getBySensor(@PathVariable Long sensorId) {
-        return readingService.getReadingsBySensor(sensorId);
+    public ResponseEntity<SensorReading> getReading(@PathVariable Long id) {
+        return ResponseEntity.ok(readingService.getReadingById(id));
     }
 
     @GetMapping
-    public List<SensorReading> listAllReadings() {
-        return readingService.listSensorReadings();
+    public ResponseEntity<List<SensorReading>> getAllReadings() {
+        return ResponseEntity.ok(readingService.getAllReadings());
+    }
+
+    @PostMapping("/evaluate")
+    public ResponseEntity<ComplianceCheckResult> evaluateReading(
+            @RequestBody SensorReading reading
+    ) {
+        return ResponseEntity.ok(evaluationService.evaluateReading(reading));
     }
 }

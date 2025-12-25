@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Sensor;
 import com.example.demo.service.SensorService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +18,17 @@ public class SensorController {
     }
 
     @PostMapping
-    public Sensor createSensor(@RequestBody Sensor sensor) {
-        return sensorService.createSensor(sensor);
+    public ResponseEntity<Sensor> createSensor(@RequestBody Sensor sensor) {
+        return ResponseEntity.ok(sensorService.createSensor(sensor));
     }
 
     @GetMapping("/{id}")
-    public Sensor getSensorById(@PathVariable Long id) {
-        return sensorService.getSensorById(id);
+    public ResponseEntity<Sensor> getSensor(@PathVariable Long id) {
+        return ResponseEntity.ok(sensorService.getSensorById(id));
     }
 
     @GetMapping
-    public List<Sensor> getAllSensors() {
-        return sensorService.getAllSensors();
+    public ResponseEntity<List<Sensor>> getAllSensors() {
+        return ResponseEntity.ok(sensorService.getAllSensors());
     }
 }
