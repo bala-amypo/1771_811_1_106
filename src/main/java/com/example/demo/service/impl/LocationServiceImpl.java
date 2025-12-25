@@ -19,23 +19,20 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public Location createLocation(Location location) {
-
-        if (location.getLocationName() == null || location.getLocationName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Location name cannot be empty");
+        if (location.getRegion() == null || location.getRegion().isEmpty()) {
+            throw new IllegalArgumentException("region required");
         }
-
         return locationRepository.save(location);
     }
 
     @Override
-    public List<Location> listLocations() {
-        return locationRepository.findAll();
+    public Location getLocation(Long id) {
+        return locationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
     }
 
     @Override
-    public Location getLocationById(Long id) {
-        return locationRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Location not found with id: " + id));
+    public List<Location> getAllLocations() {
+        return locationRepository.findAll();
     }
 }

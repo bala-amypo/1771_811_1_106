@@ -4,12 +4,8 @@ import com.example.demo.entity.ComplianceThreshold;
 import java.util.List;
 
 public interface ComplianceThresholdService {
-
-    ComplianceThreshold saveThreshold(ComplianceThreshold threshold);
-
-    ComplianceThreshold getThresholdById(Long id);
-
-    ComplianceThreshold getBySensorType(String sensorType);
-
+    ComplianceThreshold createThreshold(ComplianceThreshold threshold);
+    ComplianceThreshold getThreshold(Long id);
+    ComplianceThreshold getThresholdBySensorType(String sensorType);
     List<ComplianceThreshold> getAllThresholds();
 }
