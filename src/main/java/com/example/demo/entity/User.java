@@ -14,7 +14,8 @@ public class User {
     private String password;
     private String role;
 
-    public class User() {}
+    // ✅ Correct no-args constructor
+    public User() {}
 
     public Long getId() { return id; }
     public String getEmail() { return email; }
