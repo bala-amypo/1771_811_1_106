@@ -12,42 +12,39 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Handle NOT FOUND cases
+    // Handle resource not found errors
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(createError(ex.getMessage()));
+    public ResponseEntity<Map<String, String>> handleResourceNotFound(ResourceNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    // Handle bad requests (invalid input)
+    // Handle invalid request errors
     @ExceptionHandler(InvalidRequestException.class)
-    public ResponseEntity<?> handleInvalidRequest(InvalidRequestException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(createError(ex.getMessage()));
+    public ResponseEntity<Map<String, String>> handleInvalidRequest(InvalidRequestException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // Handle validation errors (@Valid failures)
+    // Validation exception (DTO @Valid failures)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationError(MethodArgumentNotValidException ex) {
-
+    public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
 
-        ex.getBindingResult().getFieldErrors()
-                .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+        ex.getBindingResult().getFieldErrors().forEach(fieldError ->
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage())
+        );
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    // Handle generic exceptions
+    // Default exception fallback
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleOthers(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createError("Something went wrong: " + ex.getMessage()));
-    }
-
-    private Map<String, String> createError(String message) {
-        Map<String, String> map = new HashMap<>();
-        map.put("error", message);
-        return map;
+    public ResponseEntity<Map<String, String>> handleGeneralError(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Something went wrong: " + ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
