@@ -1,40 +1,34 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.ComplianceThreshold;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.ComplianceThresholdRepository;
+import com.example.demo.service.ComplianceThresholdService;
+import org.springframework.stereotype.Service;
+
 @Service
 public class ComplianceThresholdServiceImpl implements ComplianceThresholdService {
 
-    @Autowired
-    private ComplianceThresholdRepository thresholdRepository;
+    private final ComplianceThresholdRepository repository;
+
+    public ComplianceThresholdServiceImpl(ComplianceThresholdRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public ComplianceThreshold createThreshold(ComplianceThreshold threshold) {
-
         if (threshold.getSensorType() == null || threshold.getSensorType().trim().isEmpty()) {
-            throw new InvalidRequestException("Sensor type cannot be empty");
+            throw new RuntimeException("Sensor type cannot be empty");
         }
-
-        if (threshold.getMinValue() == null || threshold.getMaxValue() == null) {
-            throw new InvalidRequestException("Threshold values cannot be null");
-        }
-
-        if (threshold.getMinValue() >= threshold.getMaxValue()) {
-            throw new InvalidRequestException("Min value must be less than max value");
-        }
-
-        return thresholdRepository.save(threshold);
+        return repository.save(threshold);
     }
 
     @Override
     public ComplianceThreshold getBySensorType(String type) {
-        if (type == null || type.trim().isEmpty()) {
-            throw new InvalidRequestException("Sensor type cannot be empty");
-        }
-
-        return thresholdRepository.findBySensorType(type)
+        return repository.findBySensorType(type)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("No threshold found for sensor type: " + type));
-    }
-
-    @Override
-    public List<ComplianceThreshold> getAllThresholds() {
-        return thresholdRepository.findAll();
+                        new ResourceNotFoundException(
+                                "No threshold found for sensor type: " + type
+                        ));
     }
 }
