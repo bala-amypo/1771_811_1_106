@@ -1,40 +1,43 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.Sensor;
-import com.example.demo.entity.SensorReading;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.SensorReadingRepository;
-import com.example.demo.repository.SensorRepository;
-import com.example.demo.service.SensorReadingService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 public class SensorReadingServiceImpl implements SensorReadingService {
 
-    private final SensorRepository sensorRepository;
-    private final SensorReadingRepository readingRepository;
+    @Autowired
+    private SensorReadingRepository readingRepository;
 
-    public SensorReadingServiceImpl(SensorRepository sensorRepository,
-                                    SensorReadingRepository readingRepository) {
-        this.sensorRepository = sensorRepository;
-        this.readingRepository = readingRepository;
-    }
+    @Autowired
+    private SensorRepository sensorRepository;
 
     @Override
-    public SensorReading addReading(SensorReading reading) {
+    public SensorReading createReading(SensorReading reading) {
 
-        Long sensorId = reading.getSensor().getId();
-        Sensor sensor = sensorRepository.findById(sensorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Sensor not found with ID: " + sensorId));
+        if (reading.getReadingValue() == null) {
+            throw new InvalidRequestException("Reading value cannot be null");
+        }
+
+        if (reading.getSensor() == null || reading.getSensor().getId() == null) {
+            throw new InvalidRequestException("Sensor ID is required");
+        }
+
+        Sensor sensor = sensorRepository.findById(reading.getSensor().getId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Sensor not found with id: " + reading.getSensor().getId()));
 
         reading.setSensor(sensor);
+        reading.setTimestamp(LocalDateTime.now());
+
         return readingRepository.save(reading);
     }
 
     @Override
     public List<SensorReading> getReadingsBySensor(Long sensorId) {
+        if (sensorId == null) {
+            throw new InvalidRequestException("Sensor ID cannot be null");
+        }
+
+        sensorRepository.findById(sensorId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Sensor not found with id: " + sensorId));
+
         return readingRepository.findBySensorId(sensorId);
     }
 }

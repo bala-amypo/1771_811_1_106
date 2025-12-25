@@ -1,42 +1,41 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.ComplianceLog;
-import com.example.demo.entity.ComplianceThreshold;
-import com.example.demo.entity.SensorReading;
-import com.example.demo.repository.ComplianceLogRepository;
-import com.example.demo.service.ComplianceEvaluationService;
-import com.example.demo.service.ComplianceThresholdService;
-import org.springframework.stereotype.Service;
-
 @Service
 public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationService {
 
-    private final ComplianceThresholdService thresholdService;
-    private final ComplianceLogRepository logRepository;
+    @Autowired
+    private ComplianceThresholdRepository thresholdRepository;
 
-    public ComplianceEvaluationServiceImpl(ComplianceThresholdService thresholdService,
-                                           ComplianceLogRepository logRepository) {
-        this.thresholdService = thresholdService;
-        this.logRepository = logRepository;
-    }
+    @Autowired
+    private SensorRepository sensorRepository;
+
+    @Autowired
+    private SensorReadingRepository readingRepository;
+
+    @Autowired
+    private ComplianceLogRepository logRepository;
 
     @Override
-    public ComplianceLog evaluateReading(SensorReading reading) {
+    public ComplianceLog evaluateReading(Long readingId) {
 
-        String sType = reading.getSensor().getType();
+        SensorReading reading = readingRepository.findById(readingId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Reading not found with id: " + readingId));
 
-        ComplianceThreshold threshold = thresholdService.getBySensorType(sType);
+        String sensorType = reading.getSensor().getSensorType();
+
+        ComplianceThreshold threshold = thresholdRepository.findBySensorType(sensorType)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "No threshold found for sensor type: " + sensorType));
+
+        boolean isCompliant =
+                reading.getReadingValue() >= threshold.getMinValue() &&
+                        reading.getReadingValue() <= threshold.getMaxValue();
 
         ComplianceLog log = new ComplianceLog();
         log.setSensor(reading.getSensor());
-        log.setReadingValue(reading.getValue());
-
-        if (reading.getValue() >= threshold.getMinValue() &&
-                reading.getValue() <= threshold.getMaxValue()) {
-            log.setStatus("COMPLIANT");
-        } else {
-            log.setStatus("NON-COMPLIANT");
-        }
+        log.setReading(reading);
+        log.setCompliant(isCompliant);
+        log.setTimestamp(LocalDateTime.now());
 
         return logRepository.save(log);
     }
