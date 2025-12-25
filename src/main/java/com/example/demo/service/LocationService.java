@@ -7,7 +7,8 @@ public interface LocationService {
 
     Location createLocation(Location location);
 
-    List<Location> listLocations();
+        List<Location> listLocations();
 
-    Location getLocationById(Long id);
-}
+            Location getLocationById(Long id);
+            }
+            
