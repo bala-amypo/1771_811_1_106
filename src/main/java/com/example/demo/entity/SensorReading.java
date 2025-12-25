@@ -1,47 +1,29 @@
-package com.example.demo.entity;
-
-import jakarta.persistence.*;
-
 @Entity
+@Table(name = "sensor_readings")
 public class SensorReading {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long sensorId;
-
-    private String sensorType;
+    @ManyToOne
+    private Sensor sensor;
 
     private Double readingValue;
+    private LocalDateTime readingTime;
+    private String status;
 
     public SensorReading() {}
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public Sensor getSensor() { return sensor; }
+    public Double getReadingValue() { return readingValue; }
+    public LocalDateTime getReadingTime() { return readingTime; }
+    public String getStatus() { return status; }
 
-    public Long getSensorId() {
-        return sensorId;
-    }
-
-    public void setSensorId(Long sensorId) {
-        this.sensorId = sensorId;
-    }
-
-    public String getSensorType() {
-        return sensorType;
-    }
-
-    public void setSensorType(String sensorType) {
-        this.sensorType = sensorType;
-    }
-
-    public Double getReadingValue() {
-        return readingValue;
-    }
-
-    public void setReadingValue(Double readingValue) {
-        this.readingValue = readingValue;
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setSensor(Sensor sensor) { this.sensor = sensor; }
+    public void setReadingValue(Double readingValue) { this.readingValue = readingValue; }
+    public void setReadingTime(LocalDateTime readingTime) { this.readingTime = readingTime; }
+    public void setStatus(String status) { this.status = status; }
 }
