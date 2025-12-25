@@ -2,33 +2,32 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Sensor;
 import com.example.demo.service.SensorService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/sensors")
+@RequestMapping("/api/sensors")
 public class SensorController {
 
-    private final SensorService sensorService;
+    private final SensorService service;
 
-    public SensorController(SensorService sensorService) {
-        this.sensorService = sensorService;
+    public SensorController(SensorService service) {
+        this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<Sensor> createSensor(@RequestBody Sensor sensor) {
-        return ResponseEntity.ok(sensorService.createSensor(sensor));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Sensor> getSensor(@PathVariable Long id) {
-        return ResponseEntity.ok(sensorService.getSensorById(id));
+    @PostMapping("/{locationId}")
+    public Sensor create(@PathVariable Long locationId,
+                         @RequestBody Sensor sensor) {
+        return service.createSensor(locationId, sensor);
     }
 
     @GetMapping
-    public ResponseEntity<List<Sensor>> getAllSensors() {
-        return ResponseEntity.ok(sensorService.getAllSensors());
+    public List<Sensor> all() {
+        return service.getAllSensors();
+    }
+
+    @GetMapping("/{id}")
+    public Sensor get(@PathVariable Long id) {
+        return service.getSensor(id);
     }
 }
