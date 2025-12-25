@@ -6,31 +6,43 @@ import com.example.demo.repository.ComplianceThresholdRepository;
 import com.example.demo.service.ComplianceThresholdService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ComplianceThresholdServiceImpl implements ComplianceThresholdService {
 
-    private final ComplianceThresholdRepository repo;
+    private final ComplianceThresholdRepository thresholdRepository;
 
-    public ComplianceThresholdServiceImpl(ComplianceThresholdRepository repo) {
-        this.repo = repo;
+    public ComplianceThresholdServiceImpl(ComplianceThresholdRepository thresholdRepository) {
+        this.thresholdRepository = thresholdRepository;
     }
 
     @Override
     public ComplianceThreshold saveThreshold(ComplianceThreshold threshold) {
-        return repo.save(threshold);
+
+        if (threshold.getSensorType() == null || threshold.getSensorType().trim().isEmpty()) {
+            throw new IllegalArgumentException("Sensor type cannot be empty");
+        }
+
+        return thresholdRepository.save(threshold);
     }
 
     @Override
-public ComplianceThreshold getThresholdById(Long id) {
-    return repo.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException(
-                    "Threshold not found with id: " + id));
-}
+    public ComplianceThreshold getThresholdById(Long id) {
+        return thresholdRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Threshold not found with id: " + id));
+    }
 
     @Override
     public ComplianceThreshold getBySensorType(String sensorType) {
-        return repo.findBySensorType(sensorType)
-                .orElseThrow(() -> new ResourceNotFoundException("No threshold found for sensor type: " + sensorType));
+        return thresholdRepository.findBySensorType(sensorType)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No threshold found for sensor type: " + sensorType));
+    }
+
+    @Override
+    public List<ComplianceThreshold> getAllThresholds() {
+        return thresholdRepository.findAll();
     }
 }
-

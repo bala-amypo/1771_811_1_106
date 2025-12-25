@@ -1,12 +1,12 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.example.demo.entity.Location;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.LocationRepository;
 import com.example.demo.service.LocationService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class LocationServiceImpl implements LocationService {
@@ -18,13 +18,14 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-public Location createLocation(Location location) {
-    if (location.getRegion() == null || location.getRegion().isBlank()) {
-        throw new IllegalArgumentException("Region is required");
-    }
-    return locationRepository.save(location);
-}
+    public Location createLocation(Location location) {
 
+        if (location.getLocationName() == null || location.getLocationName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Location name cannot be empty");
+        }
+
+        return locationRepository.save(location);
+    }
 
     @Override
     public List<Location> listLocations() {
@@ -35,6 +36,6 @@ public Location createLocation(Location location) {
     public Location getLocationById(Long id) {
         return locationRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Location not found"));
+                        new ResourceNotFoundException("Location not found with id: " + id));
     }
 }
