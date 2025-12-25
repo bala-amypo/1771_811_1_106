@@ -1,8 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.ComplianceLog;
 import com.example.demo.entity.SensorReading;
+import com.example.demo.entity.ComplianceCheckResult;
 
 public interface ComplianceEvaluationService {
-    ComplianceLog evaluateReading(SensorReading reading);
+
+    ComplianceCheckResult evaluateReading(SensorReading reading);
 }
