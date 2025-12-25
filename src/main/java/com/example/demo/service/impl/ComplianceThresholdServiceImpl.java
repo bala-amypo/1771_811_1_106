@@ -9,26 +9,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class ComplianceThresholdServiceImpl implements ComplianceThresholdService {
 
-    private final ComplianceThresholdRepository repository;
+    private final ComplianceThresholdRepository repo;
 
-    public ComplianceThresholdServiceImpl(ComplianceThresholdRepository repository) {
-        this.repository = repository;
+    public ComplianceThresholdServiceImpl(ComplianceThresholdRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public ComplianceThreshold createThreshold(ComplianceThreshold threshold) {
-        if (threshold.getSensorType() == null || threshold.getSensorType().trim().isEmpty()) {
-            throw new RuntimeException("Sensor type cannot be empty");
-        }
-        return repository.save(threshold);
+    public ComplianceThreshold saveThreshold(ComplianceThreshold threshold) {
+        return repo.save(threshold);
     }
 
     @Override
-    public ComplianceThreshold getBySensorType(String type) {
-        return repository.findBySensorType(type)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "No threshold found for sensor type: " + type
-                        ));
+    public ComplianceThreshold getThresholdById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Threshold not found with id: " + id));
+    }
+
+    @Override
+    public ComplianceThreshold getBySensorType(String sensorType) {
+        return repo.findBySensorType(sensorType)
+                .orElseThrow(() -> new ResourceNotFoundException("No threshold found for sensor type: " + sensorType));
     }
 }
