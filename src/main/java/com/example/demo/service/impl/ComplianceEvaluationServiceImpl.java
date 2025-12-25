@@ -3,36 +3,49 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.ComplianceCheckResult;
 import com.example.demo.entity.ComplianceThreshold;
 import com.example.demo.entity.SensorReading;
-import com.example.demo.exception.InvalidRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.ComplianceThresholdRepository;
 import com.example.demo.service.ComplianceEvaluationService;
-import com.example.demo.service.ComplianceThresholdService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationService {
 
-    private final ComplianceThresholdService thresholdService;
+    private final ComplianceThresholdRepository thresholdRepository;
 
-    public ComplianceEvaluationServiceImpl(ComplianceThresholdService thresholdService) {
-        this.thresholdService = thresholdService;
+    public ComplianceEvaluationServiceImpl(ComplianceThresholdRepository thresholdRepository) {
+        this.thresholdRepository = thresholdRepository;
     }
 
     @Override
     public ComplianceCheckResult evaluateReading(SensorReading reading) {
 
-        if (reading.getReadingValue() == null) {
-            throw new InvalidRequestException("Reading value cannot be null");
+        if (reading == null) {
+            throw new IllegalArgumentException("Reading cannot be null");
         }
 
-        ComplianceThreshold threshold =
-                thresholdService.getBySensorType(reading.getSensorType());
+        if (reading.getSensor() == null) {
+            throw new IllegalArgumentException("Sensor data missing in reading");
+        }
 
-        boolean compliant = reading.getReadingValue() >= threshold.getMinValue()
-                && reading.getReadingValue() <= threshold.getMaxValue();
+        String type = reading.getSensor().getSensorType();
 
-        return new ComplianceCheckResult(
-                compliant,
-                compliant ? "Reading is within threshold" : "Reading is out of range"
-        );
+        ComplianceThreshold threshold = thresholdRepository.findBySensorType(type)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No threshold found for sensor type: " + type));
+
+        boolean isCompliant =
+                reading.getReadingValue() >= threshold.getMinValue()
+                        && reading.getReadingValue() <= threshold.getMaxValue();
+
+        ComplianceCheckResult result = new ComplianceCheckResult();
+
+        result.setReadingId(reading.getId());
+        result.setSensorType(type);
+        result.setCompliant(isCompliant);
+        result.setMessage(isCompliant ? "Reading is within safe limits"
+                                      : "Reading exceeds allowed threshold");
+
+        return result;
     }
 }
