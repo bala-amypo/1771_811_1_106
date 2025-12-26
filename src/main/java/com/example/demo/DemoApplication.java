@@ -1,15 +1,12 @@
 package com.example.demo;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * Main entry point for the Water Quality Compliance Monitoring System
- */
-@SpringBootApplication
+@SpringBootTest
 public class DemoApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+    @Test
+    void contextLoads() {
+        // verifies application context starts
     }
 }
