@@ -2,10 +2,11 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.SensorReading;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public interface SensorReadingRepository extends JpaRepository<SensorReading, Long> {
-
-    // Custom alias expected by tests
-    Optional<SensorReading> findSensorReadingById(Long id);
+    List<SensorReading> findBySensor_Id(Long id);
+    List<SensorReading> findBySensor_IdAndReadingTimeBetween(Long id, LocalDateTime start, LocalDateTime end);
 }
