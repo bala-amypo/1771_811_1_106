@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.SensorReading;
 import com.example.demo.service.SensorReadingService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,24 +17,23 @@ public class SensorReadingController {
         this.readingService = readingService;
     }
 
-    // Create a new sensor reading
+    // submit a reading for a sensor
     @PostMapping
-    public ResponseEntity<SensorReading> createReading(@RequestBody SensorReading reading) {
-        SensorReading createdReading = readingService.createReading(reading);
-        return new ResponseEntity<>(createdReading, HttpStatus.CREATED);
+    public ResponseEntity<SensorReading> submitReading(
+            @RequestParam Long sensorId,
+            @RequestBody SensorReading reading) {
+        return ResponseEntity.ok(readingService.submitReading(sensorId, reading));
     }
 
-    // Get a sensor reading by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<SensorReading> getReading(@PathVariable Long id) {
-        SensorReading reading = readingService.getReading(id);
-        return new ResponseEntity<>(reading, HttpStatus.OK);
-    }
-
-    // Get all sensor readings
+    // get list of readings for a sensor
     @GetMapping
-    public ResponseEntity<List<SensorReading>> getAllReadings() {
-        List<SensorReading> readings = readingService.getAllReadings();
-        return new ResponseEntity<>(readings, HttpStatus.OK);
+    public ResponseEntity<List<SensorReading>> getReadingsBySensor(
+            @RequestParam Long sensorId) {
+        return ResponseEntity.ok(readingService.getReadingsBySensor(sensorId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SensorReading> getReadingById(@PathVariable Long id) {
+        return ResponseEntity.ok(readingService.getReading(id));
     }
 }
