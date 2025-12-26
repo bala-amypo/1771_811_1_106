@@ -9,16 +9,29 @@ public class ComplianceLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String statusAssigned;
+
     @ManyToOne
     private SensorReading sensorReading;
 
     @ManyToOne
     private ComplianceThreshold thresholdUsed;
 
-    private String statusAssigned;
-
     public Long getId() {
         return id;
+    }
+
+    // REQUIRED BY TEST
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getStatusAssigned() {
+        return statusAssigned;
+    }
+
+    public void setStatusAssigned(String statusAssigned) {
+        this.statusAssigned = statusAssigned;
     }
 
     public SensorReading getSensorReading() {
@@ -35,13 +48,5 @@ public class ComplianceLog {
 
     public void setThresholdUsed(ComplianceThreshold thresholdUsed) {
         this.thresholdUsed = thresholdUsed;
-    }
-
-    public String getStatusAssigned() {
-        return statusAssigned;
-    }
-
-    public void setStatusAssigned(String statusAssigned) {
-        this.statusAssigned = statusAssigned;
     }
 }
