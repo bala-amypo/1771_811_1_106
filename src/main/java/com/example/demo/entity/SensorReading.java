@@ -2,81 +2,36 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(name = "sensor_readings")
 public class SensorReading {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Double readingValue;
+
+    private String status; // "PENDING", "PASS", "FAIL", etc.
+
+    private LocalDateTime readingTime = LocalDateTime.now();
+
     @ManyToOne
     @JoinColumn(name = "sensor_id")
     private Sensor sensor;
 
-    @Column(nullable = false)
-    private Double readingValue;
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    private LocalDateTime readingTime = LocalDateTime.now();
+    public Double getReadingValue() { return readingValue; }
+    public void setReadingValue(Double readingValue) { this.readingValue = readingValue; }
 
-    @Column(nullable = false)
-    private String status;
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    @OneToMany(mappedBy = "sensorReading")
-    private List<ComplianceLog> logs;
+    public LocalDateTime getReadingTime() { return readingTime; }
+    public void setReadingTime(LocalDateTime readingTime) { this.readingTime = readingTime; }
 
-    public SensorReading() {
-    }
-
-    public SensorReading(Sensor sensor, Double readingValue,
-                         LocalDateTime readingTime, String status) {
-        this.sensor = sensor;
-        this.readingValue = readingValue;
-        this.readingTime = readingTime;
-        this.status = status;
-    }
-
-    // Getters and Setters
-
-    public Long getId() {
-        return id;
-    }
- 
-    public void setId(Long id) {
-        this.id = id;
-    }
- 
-    public Sensor getSensor() {
-        return sensor;
-    }
- 
-    public void setSensor(Sensor sensor) {
-        this.sensor = sensor;
-    }
- 
-    public Double getReadingValue() {
-        return readingValue;
-    }
- 
-    public void setReadingValue(Double readingValue) {
-        this.readingValue = readingValue;
-    }
- 
-    public LocalDateTime getReadingTime() {
-        return readingTime;
-    }
- 
-    public void setReadingTime(LocalDateTime readingTime) {
-        this.readingTime = readingTime;
-    }
- 
-    public String getStatus() {
-        return status;
-    }
- 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public Sensor getSensor() { return sensor; }
+    public void setSensor(Sensor sensor) { this.sensor = sensor; }
 }
