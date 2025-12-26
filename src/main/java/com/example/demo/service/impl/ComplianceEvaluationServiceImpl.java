@@ -11,7 +11,6 @@ import com.example.demo.service.ComplianceEvaluationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationService {
@@ -34,7 +33,7 @@ public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationServ
                 .orElseThrow(() -> new ResourceNotFoundException("Reading not found"));
 
         // Check if log already exists for this reading
-        List<ComplianceLog> existingLogs = logRepository.findBySensorReading_Id(readingId);
+        List<ComplianceLog> existingLogs = logRepository.findByReading_Id(readingId);
         if (!existingLogs.isEmpty()) {
             return existingLogs.get(0);
         }
@@ -58,7 +57,6 @@ public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationServ
     @Override
     public List<ComplianceLog> getLogsByReading(Long readingId) {
         return logRepository.findByReading_Id(readingId);
-
     }
 
     @Override
