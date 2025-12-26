@@ -10,34 +10,31 @@ public class ComplianceLog {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "reading_id", nullable = false)
-    private SensorReading reading;
+    private SensorReading sensorReading;
+
+    @ManyToOne
+    private ComplianceThreshold thresholdUsed;
 
     private String statusAssigned;
 
-    // Constructors
-    public ComplianceLog() {}
-
-    public ComplianceLog(SensorReading reading, String statusAssigned) {
-        this.reading = reading;
-        this.statusAssigned = statusAssigned;
-    }
-
-    // Getters and setters
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public SensorReading getSensorReading() {
+        return sensorReading;
     }
 
-    public SensorReading getReading() {
-        return reading;
+    public void setSensorReading(SensorReading sensorReading) {
+        this.sensorReading = sensorReading;
     }
 
-    public void setReading(SensorReading reading) {
-        this.reading = reading;
+    public ComplianceThreshold getThresholdUsed() {
+        return thresholdUsed;
+    }
+
+    public void setThresholdUsed(ComplianceThreshold thresholdUsed) {
+        this.thresholdUsed = thresholdUsed;
     }
 
     public String getStatusAssigned() {
