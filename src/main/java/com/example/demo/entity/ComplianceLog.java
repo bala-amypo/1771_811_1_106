@@ -9,14 +9,42 @@ public class ComplianceLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long readingId;
-    private String status;
+    @ManyToOne
+    @JoinColumn(name = "reading_id", nullable = false)
+    private SensorReading reading;
 
-    public Long getId() { return id; }
+    private String statusAssigned;
 
-    public Long getReadingId() { return readingId; }
-    public void setReadingId(Long readingId) { this.readingId = readingId; }
+    // Constructors
+    public ComplianceLog() {}
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public ComplianceLog(SensorReading reading, String statusAssigned) {
+        this.reading = reading;
+        this.statusAssigned = statusAssigned;
+    }
+
+    // Getters and setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public SensorReading getReading() {
+        return reading;
+    }
+
+    public void setReading(SensorReading reading) {
+        this.reading = reading;
+    }
+
+    public String getStatusAssigned() {
+        return statusAssigned;
+    }
+
+    public void setStatusAssigned(String statusAssigned) {
+        this.statusAssigned = statusAssigned;
+    }
 }

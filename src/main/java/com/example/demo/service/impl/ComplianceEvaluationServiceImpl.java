@@ -11,6 +11,7 @@ import com.example.demo.service.ComplianceEvaluationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationService {
@@ -28,33 +29,40 @@ public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationServ
     }
 
     @Override
-    public ComplianceLog getLog(Long readingId) {
-        // Fetch the reading
+    public ComplianceLog evaluateReading(Long readingId) {
         SensorReading reading = readingRepository.findById(readingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Reading not found with id: " + readingId));
+                .orElseThrow(() -> new ResourceNotFoundException("Reading not found"));
 
-        // Check if log exists for this reading
+        // Check if log already exists for this reading
         List<ComplianceLog> existingLogs = logRepository.findBySensorReading_Id(readingId);
         if (!existingLogs.isEmpty()) {
             return existingLogs.get(0);
         }
 
-        // Fetch threshold for the sensor type
         ComplianceThreshold threshold = thresholdRepository.findBySensorType(reading.getSensor().getSensorType())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Threshold not found for sensor type: " + reading.getSensor().getSensorType()));
+                .orElseThrow(() -> new ResourceNotFoundException("Threshold not found"));
 
-        // Create new compliance log
         ComplianceLog log = new ComplianceLog();
-        log.setReading(reading);  // <-- matches your entity
-        if (reading.getReadingValue() >= threshold.getMinValue() &&
-            reading.getReadingValue() <= threshold.getMaxValue()) {
-            log.setStatusAssigned("SAFE"); // <-- matches your entity method
-        } else {
+        log.setReading(reading);
+
+        double value = reading.getReadingValue();
+        if (value < threshold.getMinValue() || value > threshold.getMaxValue()) {
             log.setStatusAssigned("UNSAFE");
+        } else {
+            log.setStatusAssigned("SAFE");
         }
 
-        logRepository.save(log);
-        return log;
+        return logRepository.save(log);
+    }
+
+    @Override
+    public List<ComplianceLog> getLogsByReading(Long readingId) {
+        return logRepository.findBySensorReading_Id(readingId);
+    }
+
+    @Override
+    public ComplianceLog getLog(Long id) {
+        return logRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Compliance log not found"));
     }
 }
