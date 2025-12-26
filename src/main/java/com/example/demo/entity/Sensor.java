@@ -14,11 +14,19 @@ public class Sensor {
 
     private String sensorType;
 
+    private Boolean isActive = true;   // Required by test 4.8
+
     @ManyToOne
+    @JoinColumn(name = "location_id")
     private Location location;
 
+    // Getters & Setters
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getSensorCode() {
@@ -35,6 +43,14 @@ public class Sensor {
 
     public void setSensorType(String sensorType) {
         this.sensorType = sensorType;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean active) {
+        isActive = active;
     }
 
     public Location getLocation() {

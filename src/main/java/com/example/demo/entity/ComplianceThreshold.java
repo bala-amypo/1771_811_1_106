@@ -9,15 +9,20 @@ public class ComplianceThreshold {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String sensorType;
 
-    private double minValue;
-    private double maxValue;
+    private Double minValue;
+    private Double maxValue;
+
     private String severityLevel;
 
+    // Getters & Setters
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getSensorType() {
@@ -28,19 +33,19 @@ public class ComplianceThreshold {
         this.sensorType = sensorType;
     }
 
-    public double getMinValue() {
+    public Double getMinValue() {
         return minValue;
     }
 
-    public void setMinValue(double minValue) {
+    public void setMinValue(Double minValue) {
         this.minValue = minValue;
     }
 
-    public double getMaxValue() {
+    public Double getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(double maxValue) {
+    public void setMaxValue(Double maxValue) {
         this.maxValue = maxValue;
     }
 
