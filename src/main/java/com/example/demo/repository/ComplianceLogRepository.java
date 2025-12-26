@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface ComplianceLogRepository extends JpaRepository<ComplianceLog, Long> {
 
-    List<ComplianceLog> findBySensorReading_Id(Long readingId);
+    // Correct property name: reading
+    List<ComplianceLog> findByReading_Id(Long readingId);
+
 }
