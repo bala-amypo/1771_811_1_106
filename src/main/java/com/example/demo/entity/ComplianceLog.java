@@ -1,52 +1,85 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "compliance_logs")
 public class ComplianceLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String status;
-
-    private String message;
-
     @ManyToOne
     @JoinColumn(name = "sensor_reading_id")
     private SensorReading sensorReading;
 
-    // Getters & Setters
+    @ManyToOne
+    @JoinColumn(name = "threshold_id")
+    private ComplianceThreshold thresholdUsed;
+
+    @Column(nullable = false)
+    private String statusAssigned;
+
+    private String remarks;
+
+    private LocalDateTime loggedAt = LocalDateTime.now();
+
+    public ComplianceLog() {
+    }
+
+    public ComplianceLog(SensorReading sensorReading,
+                         ComplianceThreshold thresholdUsed,
+                         String statusAssigned,
+                         String remarks,
+                         LocalDateTime loggedAt) {
+        this.sensorReading = sensorReading;
+        this.thresholdUsed = thresholdUsed;
+        this.statusAssigned = statusAssigned;
+        this.remarks = remarks;
+        this.loggedAt = loggedAt;
+    }
+
+    // Getters and Setters
+
     public Long getId() {
         return id;
     }
-
+ 
     public void setId(Long id) {
         this.id = id;
     }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
+ 
     public SensorReading getSensorReading() {
         return sensorReading;
     }
-
+ 
     public void setSensorReading(SensorReading sensorReading) {
         this.sensorReading = sensorReading;
+    }
+ 
+    public ComplianceThreshold getThresholdUsed() {
+        return thresholdUsed;
+    }
+ 
+    public void setThresholdUsed(ComplianceThreshold thresholdUsed) {
+        this.thresholdUsed = thresholdUsed;
+    }
+ 
+    public String getStatusAssigned() {
+        return statusAssigned;
+    }
+ 
+    public void setStatusAssigned(String statusAssigned) {
+        this.statusAssigned = statusAssigned;
+    }
+ 
+    public String getRemarks() {
+        return remarks;
+    }
+ 
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }
