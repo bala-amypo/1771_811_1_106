@@ -4,13 +4,17 @@ import com.example.demo.entity.ComplianceThreshold;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ComplianceThresholdRepository;
 import com.example.demo.service.ComplianceThresholdService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ComplianceThresholdServiceImpl implements ComplianceThresholdService {
 
     private final ComplianceThresholdRepository thresholdRepository;
 
+    @Autowired
     public ComplianceThresholdServiceImpl(ComplianceThresholdRepository thresholdRepository) {
         this.thresholdRepository = thresholdRepository;
     }
@@ -18,7 +22,7 @@ public class ComplianceThresholdServiceImpl implements ComplianceThresholdServic
     @Override
     public ComplianceThreshold createThreshold(ComplianceThreshold threshold) {
         if (threshold.getMinValue() >= threshold.getMaxValue()) {
-            throw new IllegalArgumentException("minvalue must be less than maxvalue");
+            throw new IllegalArgumentException("minValue must be less than maxValue");
         }
         return thresholdRepository.save(threshold);
     }
