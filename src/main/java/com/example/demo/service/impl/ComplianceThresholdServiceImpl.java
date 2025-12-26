@@ -1,32 +1,42 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.ComplianceThreshold;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ComplianceThresholdRepository;
 import com.example.demo.service.ComplianceThresholdService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-@Service
 public class ComplianceThresholdServiceImpl implements ComplianceThresholdService {
 
-    @Autowired
-    private ComplianceThresholdRepository repository;
+    private final ComplianceThresholdRepository thresholdRepository;
 
-    @Override
-    public List<ComplianceThreshold> getAllThresholds() {
-        return repository.findAll();
+    public ComplianceThresholdServiceImpl(ComplianceThresholdRepository thresholdRepository) {
+        this.thresholdRepository = thresholdRepository;
     }
 
     @Override
     public ComplianceThreshold createThreshold(ComplianceThreshold threshold) {
-        return repository.save(threshold);
+        if (threshold.getMinValue() >= threshold.getMaxValue()) {
+            throw new IllegalArgumentException("minvalue must be less than maxvalue");
+        }
+        return thresholdRepository.save(threshold);
+    }
+
+    @Override
+    public ComplianceThreshold getThreshold(Long id) {
+        return thresholdRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Threshold not found"));
     }
 
     @Override
     public ComplianceThreshold getThresholdBySensorType(String sensorType) {
-        return repository.findBySensorType(sensorType);
+        return thresholdRepository.findBySensorType(sensorType)
+                .orElseThrow(() -> new ResourceNotFoundException("Threshold not found"));
+    }
+
+    @Override
+    public List<ComplianceThreshold> getAllThresholds() {
+        return thresholdRepository.findAll();
     }
 }
