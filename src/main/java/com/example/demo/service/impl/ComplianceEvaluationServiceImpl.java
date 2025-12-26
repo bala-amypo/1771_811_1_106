@@ -28,15 +28,15 @@ public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationServ
     }
 
     @Override
-    public List<ComplianceLog> getLogsByReading(Long readingId) {
+    public ComplianceLog getLog(Long readingId) {
         // Fetch the reading
         SensorReading reading = readingRepository.findById(readingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reading not found with id: " + readingId));
 
-        // Check if logs exist for this reading
+        // Check if log exists for this reading
         List<ComplianceLog> existingLogs = logRepository.findBySensorReading_Id(readingId);
         if (!existingLogs.isEmpty()) {
-            return existingLogs;
+            return existingLogs.get(0);
         }
 
         // Fetch threshold for the sensor type
@@ -46,15 +46,15 @@ public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationServ
 
         // Create new compliance log
         ComplianceLog log = new ComplianceLog();
-        log.setSensorReading(reading);  // <-- matches your test cases
+        log.setReading(reading);  // <-- matches your entity
         if (reading.getReadingValue() >= threshold.getMinValue() &&
             reading.getReadingValue() <= threshold.getMaxValue()) {
-            log.setStatus("SAFE");  // <-- matches your entity method
+            log.setStatusAssigned("SAFE"); // <-- matches your entity method
         } else {
-            log.setStatus("UNSAFE");
+            log.setStatusAssigned("UNSAFE");
         }
 
         logRepository.save(log);
-        return List.of(log);
+        return log;
     }
 }
