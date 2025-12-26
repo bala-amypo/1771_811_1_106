@@ -3,20 +3,17 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users") // avoid SQL reserved keyword collision
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String email;
-
+    private String username;
     private String password;
 
-    private String role;  // e.g., "ADMIN" / "USER"
+    public User() {}
 
-    // Getters & Setters
     public Long getId() {
         return id;
     }
@@ -25,12 +22,12 @@ public class User {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -39,13 +36,5 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }
