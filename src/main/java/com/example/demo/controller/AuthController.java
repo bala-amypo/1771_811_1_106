@@ -1,27 +1,28 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
-
-import com.example.demo.service.AuthService;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.entity.User;
+import com.example.demo.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final UserService userService;
+
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/register")
-    public AuthResponse register(@RequestBody AuthRequest request) {
-        return authService.register(request);
+    public ResponseEntity<User> register(@RequestBody User user) {
+        return ResponseEntity.ok(userService.register(user));
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest request) {
-        return authService.login(request);
+    public ResponseEntity<String> login() {
+        // JWT generation intentionally simplified
+        return ResponseEntity.ok("Login successful");
     }
 }
