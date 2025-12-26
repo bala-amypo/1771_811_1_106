@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SensorService {
 
-    Sensor createSensor(Long locationId, Sensor sensor);
+    Sensor createSensor(Sensor sensor);
 
     Sensor getSensor(Long id);
 
