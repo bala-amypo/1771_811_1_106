@@ -15,15 +15,11 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Water Quality Compliance Monitoring API")
-                        .version("1.0")
-                        .description("API documentation for Water Quality Compliance System"))
+                        .title("Water Quality Compliance API")
+                        .version("1.0"))
                 .servers(List.of(
                         new Server()
-                                .url("http://localhost:9001")
-                                .description("Local Server"),
-                        new Server()
-                                .url("https://9350.pro604cr.amypo.ai/")
+                                .url("https://9350.pro604cr.amypo.ai")
                                 .description("Production Server")
                 ));
     }
