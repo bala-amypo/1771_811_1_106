@@ -57,7 +57,8 @@ public class ComplianceEvaluationServiceImpl implements ComplianceEvaluationServ
 
     @Override
     public List<ComplianceLog> getLogsByReading(Long readingId) {
-        return logRepository.findBySensorReading_Id(readingId);
+        return logRepository.findByReading_Id(readingId);
+
     }
 
     @Override
