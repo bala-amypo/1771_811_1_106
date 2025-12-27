@@ -8,6 +8,5 @@ public class DemoApplicationTests {
 
     @Test
     public void contextLoads() {
-        // verifies Spring Boot application context starts
     }
 }
