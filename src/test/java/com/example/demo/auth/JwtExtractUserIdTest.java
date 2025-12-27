@@ -9,15 +9,17 @@ public class JwtExtractUserIdTest {
     private final JwtTokenProvider jwt = new JwtTokenProvider();
 
     @Test
-    public void testExtractUserIdFromToken() {
+    public void testExtractUserId() {
         // GIVEN
-        Long expectedId = 12L;
+        Long userId = 25L;
+        String role = "ADMIN";
 
         // WHEN
-        String token = jwt.generateToken(expectedId.toString());
-        Long extractedId = jwt.extractUserId(token);
+        String token = jwt.generateToken(userId, role);
 
         // THEN
-        assertEquals(expectedId, extractedId, "User ID should match the extracted value from token");
+        Long extractedUserId = jwt.extractUserId(token);
+        assertNotNull(extractedUserId, "Extracted user ID should not be null");
+        assertEquals(userId, extractedUserId, "Extracted user ID should match original user ID");
     }
 }
