@@ -27,7 +27,6 @@ public class SwaggerConfig {
                                 .url("https://9350.pro604cr.amypo.ai")
                                 .description("Production Server")
                 ))
-                // 🔐 Add security globally so Authorize button appears
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
                 .components(new Components()
                         .addSecuritySchemes(SECURITY_SCHEME_NAME,
@@ -35,7 +34,7 @@ public class SwaggerConfig {
                                         .name(SECURITY_SCHEME_NAME)
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
-                                        .bearerFormat("JWT") // Optional
+                                        .bearerFormat("JWT")
                         ));
     }
 }

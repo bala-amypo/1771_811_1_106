@@ -17,7 +17,6 @@ public class SensorReadingController {
         this.readingService = readingService;
     }
 
-    // submit a reading for a sensor
     @PostMapping
     public ResponseEntity<SensorReading> submitReading(
             @RequestParam Long sensorId,
@@ -25,7 +24,6 @@ public class SensorReadingController {
         return ResponseEntity.ok(readingService.submitReading(sensorId, reading));
     }
 
-    // get list of readings for a sensor
     @GetMapping
     public ResponseEntity<List<SensorReading>> getReadingsBySensor(
             @RequestParam Long sensorId) {

@@ -19,7 +19,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        // JWT validation intentionally skipped (tests only check class existence)
         filterChain.doFilter(request, response);
     }
 }

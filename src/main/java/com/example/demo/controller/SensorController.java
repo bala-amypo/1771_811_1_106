@@ -17,7 +17,6 @@ public class SensorController {
         this.sensorService = sensorService;
     }
 
-    // CREATE sensor (locationId comes from query param or path param)
     @PostMapping
     public ResponseEntity<Sensor> createSensor(
             @RequestParam Long locationId,
