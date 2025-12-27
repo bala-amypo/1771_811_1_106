@@ -17,7 +17,6 @@ public class AuthController {
         this.userService = userService;
     }
 
-    // REGISTER USER
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
         User savedUser = userService.register(user);
@@ -25,7 +24,6 @@ public class AuthController {
         return ResponseEntity.ok(savedUser);
     }
 
-    // LOGIN USER
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User loginRequest) {
 
@@ -37,7 +35,7 @@ public class AuthController {
                     .body("Invalid email or password");
         }
 
-        user.setPassword(null); // hide password
+        user.setPassword(null); 
         return ResponseEntity.ok(user);
     }
 }
